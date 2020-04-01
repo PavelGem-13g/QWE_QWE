@@ -26,10 +26,10 @@ namespace Microsoft.BotBuilderSamples.Bots
             int choose = int.Parse(turnContext.Activity.Text);
             if (choose == 1)
             {
-                await turnContext.SendActivityAsync("Введите x1");
+                await turnContext.SendActivityAsync("Input x1");
                 ushort x1 = ushort.Parse(turnContext.Activity.Text);
                 string result = kolvo(x1) + "";
-                await turnContext.SendActivityAsync("Результат задачи №1{0}", result);
+                await turnContext.SendActivityAsync($"Programm result №1{result}", );
 
             }
 
