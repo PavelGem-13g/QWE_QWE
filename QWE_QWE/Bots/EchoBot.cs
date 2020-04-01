@@ -27,10 +27,10 @@ namespace Microsoft.BotBuilderSamples.Bots
                 case "Y":
                 case "u":
                 case "U":
-                    return "Гласная";
+                    return "Vowel";
 
                 default:
-                    return "Согласная или что-то другое, но точно не гласная";
+                    return "Consonant or something else, but definitely not a vowel";
             }
         }
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
