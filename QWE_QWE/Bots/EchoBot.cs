@@ -13,10 +13,8 @@ namespace Microsoft.BotBuilderSamples.Bots
     {
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            int i = 0;
-            //{turnContext.Activity.Text}
-            var replyText = $"Echo: {i}";
-            await turnContext.SendActivityAsync(MessageFactory.Text(replyText, replyText), cancellationToken);
+            var responseMessage = turnContext.Activity.Text;
+            if(responseMessage=="1") await turnContext.SendActivityAsync($"Welcome!");
         }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
