@@ -29,7 +29,7 @@ namespace Microsoft.BotBuilderSamples.Bots
                 await turnContext.SendActivityAsync("Input x1");
                 ushort x1 = ushort.Parse(turnContext.Activity.Text);
                 string result = kolvo(x1) + "";
-                await turnContext.SendActivityAsync($"Programm result ¹1{result}", );
+                await turnContext.SendActivityAsync($"Programm result ¹1{result}");
 
             }
 
