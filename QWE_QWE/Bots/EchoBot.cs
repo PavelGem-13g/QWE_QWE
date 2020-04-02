@@ -13,7 +13,7 @@ namespace Microsoft.BotBuilderSamples.Bots
     {
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            var replyText = $"Echo: {turnContext.Activity.Text}";
+            var replyText = $"Привет: {turnContext.Activity.Text}";
             await turnContext.SendActivityAsync(replyText);
         }
 
