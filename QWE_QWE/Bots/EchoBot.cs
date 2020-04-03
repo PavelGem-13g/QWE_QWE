@@ -250,18 +250,18 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                 {
                     if (!Log)
                     {
-                        await turnContext.SendActivityAsync("Введите Login : ");
+                        await turnContext.SendActivityAsync("Еnter Login : ");
                         Login = Console.ReadLine();
                         comandSQL = new SQLiteCommand($"SELECT (Login) FROM \"BankAccounts\"", connect);
                         reader = comandSQL.ExecuteReader();
                         while (reader.Read()) if ((string)reader["Login"] == Login) Log = true;
-                        if (!Log) throw new Exception("Не существует пользователя с таким Login");
+                        if (!Log) throw new Exception("There is no user with this Login");
                     }
-                    else Console.WriteLine($"Введите Login : {Login}");
+                    else Console.WriteLine($"Еnter Login : {Login}");
                     comandSQL = new SQLiteCommand($"SELECT * FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
                     reader = comandSQL.ExecuteReader();
                     reader.Read();
-                    Console.Write("Введите Password : ");
+                    Console.Write("Еnter Password : ");
                     Password = Console.ReadLine();
                     if (Password != (string)reader["Password"]) throw new Exception("Неправильный пароль");
                     Pas = false;
@@ -301,10 +301,10 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                 long money = (long)reader["Money"];
                 do
                 {
-                    await turnContext.SendActivityAsync($@"Добро пожаловать, {Login}
-Ваш баланс : {money}
-Вам доступны такие действия : 
-1 - Перевод денег");
+                    await turnContext.SendActivityAsync($@"Welcome, {Login}
+Your balance : {money}
+These actions are available to you : 
+1 - Money transfer");
                     try
                     {
                         if (!Int32.TryParse(turnContext.Activity.Text, out action) || (action != 1)) throw new Exception("Неправильный ввод действия");
@@ -312,8 +312,8 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                     }
                     catch (Exception Error)
                     {
-                        await turnContext.SendActivityAsync($@"Ошибка : {Error.Message}
-Пожалуйста, повторите ввод");
+                        await turnContext.SendActivityAsync($@"Error : {Error.Message}
+Please retype ");
                         act = true;
                         Thread.Sleep(500);
                     }
@@ -326,7 +326,7 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                         long summ = 0, id = 0;
                         do
                         {
-                            await turnContext.SendActivityAsync("Введите id клиента : ");
+                            await turnContext.SendActivityAsync("Enter client id : ");
                             try
                             {
                                 if (!Int64.TryParse(turnContext.Activity.Text, out id)) throw new Exception("Неверный id");
@@ -337,14 +337,14 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                                 comandSQL.ExecuteNonQuery();
                                 comandSQL = new SQLiteCommand($"SELECT (\"id\") FROM \"BankAccounts\" WHERE (\"Login\") = \"{Login}\"", connect);
                                 reader = comandSQL.ExecuteReader(); reader.Read();
-                                if (id == (long)reader["id"]) { reader.Close(); throw new Exception("Неверный id, вы не можете перевести деньги самому себе"); }
+                                if (id == (long)reader["id"]) { reader.Close(); throw new Exception("Invalid id, you cannot transfer money to yourself"); }
                                 reader.Close();
-                                if (act) throw new Exception("Неверный id");
+                                if (act) throw new Exception("Incorrect id");
                             }
                             catch (Exception Error)
                             {
-                                await turnContext.SendActivityAsync($@"Ошибка : {Error.Message}
-Пожалуйста, повторите ввод");
+                                await turnContext.SendActivityAsync($@"Error : {Error.Message}
+Please, retype");
                                 act = true;
                                 Thread.Sleep(500);
                             }
@@ -352,21 +352,21 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                         while (act);
                         do
                         {
-                            await turnContext.SendActivityAsync($"Введите id клиента : {id}");
-                            await turnContext.SendActivityAsync("Введите сумму для перевода (комиссия 1%) : ");
+                            await turnContext.SendActivityAsync($"Enter client id : {id}");
+                            await turnContext.SendActivityAsync("Enter the amount to transfer(commission 1 %) : ");
                             try
                             {
                                 if (!long.TryParse(Console.ReadLine(), out summ) || summ < 0) throw new Exception("Невозможная сумма");
                                 comandSQL = new SQLiteCommand($"SELECT (\"Money\") FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
                                 reader = comandSQL.ExecuteReader(); reader.Read();
-                                if (summ > (long)reader["Money"]) { reader.Close(); throw new Exception("У вас недостаточно средств"); }
+                                if (summ > (long)reader["Money"]) { reader.Close(); throw new Exception("You do not have enough funds"); }
                                 act = false;
 
                             }
                             catch (Exception Error)
                             {
-                                await turnContext.SendActivityAsync($@"Ошибка : {Error.Message}
-Пожалуйста, повторите ввод");
+                                await turnContext.SendActivityAsync($@"Error : {Error.Message}
+Please, retype");
                                 act = true;
                                 Thread.Sleep(500);
                             }
