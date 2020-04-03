@@ -250,19 +250,19 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                 {
                     if (!Log)
                     {
-                        await turnContext.SendActivityAsync("Еnter Login : ");
-                        Login = Console.ReadLine();
+                        await turnContext.SendActivityAsync("Enter Login : ");
+                        Login = turnContext.Activity.Text;
                         comandSQL = new SQLiteCommand($"SELECT (Login) FROM \"BankAccounts\"", connect);
                         reader = comandSQL.ExecuteReader();
                         while (reader.Read()) if ((string)reader["Login"] == Login) Log = true;
                         if (!Log) throw new Exception("There is no user with this Login");
                     }
-                    else Console.WriteLine($"Еnter Login : {Login}");
+                    else await turnContext.SendActivityAsync($"Еnter Login : {Login}");
                     comandSQL = new SQLiteCommand($"SELECT * FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
                     reader = comandSQL.ExecuteReader();
                     reader.Read();
-                    Console.Write("Еnter Password : ");
-                    Password = Console.ReadLine();
+                        await turnContext.SendActivityAsync("Еnter Password : ");
+                    Password = turnContext.Activity.Text;
                     if (Password != (string)reader["Password"]) throw new Exception("Неправильный пароль");
                     Pas = false;
                 }
@@ -356,7 +356,7 @@ Please, retype");
                             await turnContext.SendActivityAsync("Enter the amount to transfer(commission 1 %) : ");
                             try
                             {
-                                if (!long.TryParse(Console.ReadLine(), out summ) || summ < 0) throw new Exception("Невозможная сумма");
+                                if (!long.TryParse(turnContext.Activity.Text, out summ) || summ < 0) throw new Exception("Невозможная сумма");
                                 comandSQL = new SQLiteCommand($"SELECT (\"Money\") FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
                                 reader = comandSQL.ExecuteReader(); reader.Read();
                                 if (summ > (long)reader["Money"]) { reader.Close(); throw new Exception("You do not have enough funds"); }
