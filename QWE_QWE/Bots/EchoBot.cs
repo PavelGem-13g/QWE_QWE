@@ -252,6 +252,7 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                     {
                         await turnContext.SendActivityAsync("Enter Login : ");
                         Login = turnContext.Activity.Text;
+                        Thread.Sleep(2000);
                         comandSQL = new SQLiteCommand($"SELECT (Login) FROM \"BankAccounts\"", connect);
                         reader = comandSQL.ExecuteReader();
                         while (reader.Read()) if ((string)reader["Login"] == Login) Log = true;
@@ -263,7 +264,8 @@ string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login 
                     reader.Read();
                         await turnContext.SendActivityAsync("Еnter Password : ");
                     Password = turnContext.Activity.Text;
-                    if (Password != (string)reader["Password"]) throw new Exception("Неправильный пароль");
+                        Thread.Sleep(2000);
+                        if (Password != (string)reader["Password"]) throw new Exception("Неправильный пароль");
                     Pas = false;
                 }
                 catch (Exception Error)
@@ -307,7 +309,11 @@ These actions are available to you :
 1 - Money transfer");
                     try
                     {
-                        if (!Int32.TryParse(turnContext.Activity.Text, out action) || (action != 1)) throw new Exception("Неправильный ввод действия");
+                            Thread.Sleep(2000);
+                            if (!Int32.TryParse(turnContext.Activity.Text, out action) || (action != 1))
+                            {
+                                throw new Exception("Неправильный ввод действия");
+                            } 
                         act = false;
                     }
                     catch (Exception Error)
@@ -329,7 +335,8 @@ Please retype ");
                             await turnContext.SendActivityAsync("Enter client id : ");
                             try
                             {
-                                if (!Int64.TryParse(turnContext.Activity.Text, out id)) throw new Exception("Неверный id");
+                                    Thread.Sleep(2000);
+                                    if (!Int64.TryParse(turnContext.Activity.Text, out id)) throw new Exception("Неверный id");
                                 comandSQL = new SQLiteCommand("SELECT (\"id\") FROM \"BankAccounts\"", connect);
                                 reader = comandSQL.ExecuteReader();
                                 while (reader.Read()) if (id == (long)reader["id"]) { act = false; break; } else act = true;
@@ -356,7 +363,8 @@ Please, retype");
                             await turnContext.SendActivityAsync("Enter the amount to transfer(commission 1 %) : ");
                             try
                             {
-                                if (!long.TryParse(turnContext.Activity.Text, out summ) || summ < 0) throw new Exception("Невозможная сумма");
+                                    Thread.Sleep(2000);
+                                    if (!long.TryParse(turnContext.Activity.Text, out summ) || summ < 0) throw new Exception("Невозможная сумма");
                                 comandSQL = new SQLiteCommand($"SELECT (\"Money\") FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
                                 reader = comandSQL.ExecuteReader(); reader.Read();
                                 if (summ > (long)reader["Money"]) { reader.Close(); throw new Exception("You do not have enough funds"); }
@@ -392,7 +400,8 @@ Please, retype");
                 //Program.AllOutput(connect);
                 //Console.Write("\nВсё? ");
                 await turnContext.SendActivityAsync("Close program?");
-                if (turnContext.Activity.Text.ToLower().Replace("l", "д").Replace("f", "а") == "да")
+                    Thread.Sleep(2000);
+                    if (turnContext.Activity.Text.ToLower().Replace("l", "д").Replace("f", "а") == "да")
                     break;
             }
             connect.Close();
