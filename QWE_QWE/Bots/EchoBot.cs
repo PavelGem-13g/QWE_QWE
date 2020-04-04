@@ -262,7 +262,7 @@ So нам нужно создать новую");
                             if (!Log)
                             {
                                 await turnContext.SendActivityAsync("Enter Login : ");
-                                Login = turnContext.Activity.Text;
+                                Login = (string)turnContext.Activity.Text;
                                 comandSQL = new SQLiteCommand($"SELECT \"Login\" FROM \"BankAccounts\"", connect);
                                 reader = comandSQL.ExecuteReader();
                                 while (reader.Read()) if ((string)reader["Login"] == Login) Log = true;
