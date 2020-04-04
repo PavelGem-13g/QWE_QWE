@@ -236,7 +236,7 @@ So нам нужно создать новую");
                 SQLiteDataReader reader;
                 string directory = System.IO.Path.Combine(Environment.CurrentDirectory, "Test.db"), Login = "";
                 //string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"); //Директорию сам поменяешь
-                                                                                                      //!
+                //!
                 SQLiteConnection connect = new SQLiteConnection($"Data Source = {directory}; Version = 3");
 
                 if (!File.Exists(directory))
@@ -251,150 +251,149 @@ So нам нужно создать новую");
                                         {*/
                     await turnContext.SendActivityAsync($"Sorry, no database was found in the {directory} data base, so we need to create a new one");
 
-                connect.Open();
-                string Password;
+                    connect.Open();
+                    string Password;
 
-                bool Log = false, Pas = false;
-                do
-                {
-                    try
-                    {
-                        if (!Log)
-                        {
-                            await turnContext.SendActivityAsync("Enter Login : ");
-                            Login = turnContext.Activity.Text;
-                            Thread.Sleep(2000);
-                            comandSQL = new SQLiteCommand($"SELECT \"Login\" FROM \"BankAccounts\"", connect);
-                            reader = comandSQL.ExecuteReader();
-                            while (reader.Read()) if ((string)reader["Login"] == Login) Log = true;
-                            if (!Log) throw new Exception("There is no user with this Login");
-                        }
-                        else await turnContext.SendActivityAsync($"Еnter Login : {Login}");
-                        comandSQL = new SQLiteCommand($"SELECT * FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
-                        reader = comandSQL.ExecuteReader();
-                        reader.Read();
-                        await turnContext.SendActivityAsync("Еnter Password : ");
-                        Password = turnContext.Activity.Text;
-                        Thread.Sleep(2000);
-                        if (Password != (string)reader["Password"]) throw new Exception("Неправильный пароль");
-                        Pas = false;
-                    }
-                    catch (Exception Error)
-                    {
-                        await turnContext.SendActivityAsync($"Error : {Error.Message} Please retype");
-                        Pas = true;
-                        Thread.Sleep(500);
-                    }
-                }
-                while (Pas || !Log);
-
-                while (true)
-                {
-                    //Program.Actions(connect, Login);
-
-                    int action = 0;
-                    bool act;
-                    comandSQL = new SQLiteCommand($"SELECT (\"Money\") FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
-                    reader = comandSQL.ExecuteReader();
-                    reader.Read();
-                    long money = (long)reader["Money"];
+                    bool Log = false, Pas = false;
                     do
                     {
-                        await turnContext.SendActivityAsync($@"Welcome, {Login}
-Your balance : {money}
-These actions are available to you : 
-1 - Money transfer");
                         try
                         {
-                            Thread.Sleep(2000);
-                            if (!Int32.TryParse(turnContext.Activity.Text, out action) || (action != 1))
+                            if (!Log)
                             {
-                                throw new Exception("Неправильный ввод действия");
+                                await turnContext.SendActivityAsync("Enter Login : ");
+                                Login = turnContext.Activity.Text;
+                                comandSQL = new SQLiteCommand($"SELECT \"Login\" FROM \"BankAccounts\"", connect);
+                                reader = comandSQL.ExecuteReader();
+                                while (reader.Read()) if ((string)reader["Login"] == Login) Log = true;
+                                if (!Log) throw new Exception("There is no user with this Login");
                             }
-                            act = false;
+                            else await turnContext.SendActivityAsync($"Еnter Login : {Login}");
+                            comandSQL = new SQLiteCommand($"SELECT * FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
+                            reader = comandSQL.ExecuteReader();
+                            reader.Read();
+                            await turnContext.SendActivityAsync("Еnter Password : ");
+                            Password = turnContext.Activity.Text;
+                            if (Password != (string)reader["Password"]) throw new Exception("Неправильный пароль");
+                            Pas = false;
                         }
                         catch (Exception Error)
                         {
-                            await turnContext.SendActivityAsync($@"Error : {Error.Message}
-Please retype ");
-                            act = true;
+                            await turnContext.SendActivityAsync($"Error : {Error.Message} Please retype");
+                            Pas = true;
                             Thread.Sleep(500);
                         }
                     }
-                    while (act);
-                    switch (action)
+                    while (Pas || !Log);
+
+                    while (true)
                     {
-                        case 1:
-                            act = false;
-                            long summ = 0, id = 0;
-                            do
-                            {
-                                await turnContext.SendActivityAsync("Enter client id : ");
-                                try
-                                {
-                                    Thread.Sleep(2000);
-                                    if (!Int64.TryParse(turnContext.Activity.Text, out id)) throw new Exception("Неверный id");
-                                    comandSQL = new SQLiteCommand("SELECT (\"id\") FROM \"BankAccounts\"", connect);
-                                    reader = comandSQL.ExecuteReader();
-                                    while (reader.Read()) if (id == (long)reader["id"]) { act = false; break; } else act = true;
-                                    reader.Close();
-                                    comandSQL.ExecuteNonQuery();
-                                    comandSQL = new SQLiteCommand($"SELECT (\"id\") FROM \"BankAccounts\" WHERE (\"Login\") = \"{Login}\"", connect);
-                                    reader = comandSQL.ExecuteReader(); reader.Read();
-                                    if (id == (long)reader["id"]) { reader.Close(); throw new Exception("Invalid id, you cannot transfer money to yourself"); }
-                                    reader.Close();
-                                    if (act) throw new Exception("Incorrect id");
-                                }
-                                catch (Exception Error)
-                                {
-                                    await turnContext.SendActivityAsync($@"Error : {Error.Message}
-Please, retype");
-                                    act = true;
-                                    Thread.Sleep(500);
-                                }
-                            }
-                            while (act);
-                            do
-                            {
-                                await turnContext.SendActivityAsync($"Enter client id : {id}");
-                                await turnContext.SendActivityAsync("Enter the amount to transfer(commission 1 %) : ");
-                                try
-                                {
-                                    Thread.Sleep(2000);
-                                    if (!long.TryParse(turnContext.Activity.Text, out summ) || summ < 0) throw new Exception("Невозможная сумма");
-                                    comandSQL = new SQLiteCommand($"SELECT (\"Money\") FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
-                                    reader = comandSQL.ExecuteReader(); reader.Read();
-                                    if (summ > (long)reader["Money"]) { reader.Close(); throw new Exception("You do not have enough funds"); }
-                                    act = false;
+                        //Program.Actions(connect, Login);
 
-                                }
-                                catch (Exception Error)
+                        int action = 0;
+                        bool act;
+                        comandSQL = new SQLiteCommand($"SELECT (\"Money\") FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
+                        reader = comandSQL.ExecuteReader();
+                        reader.Read();
+                        long money = (long)reader["Money"];
+                        do
+                        {
+                            await turnContext.SendActivityAsync($@"Welcome, {Login}
+Your balance : {money}
+These actions are available to you : 
+1 - Money transfer");
+                            try
+                            {
+                                Thread.Sleep(2000);
+                                if (!Int32.TryParse(turnContext.Activity.Text, out action) || (action != 1))
                                 {
-                                    await turnContext.SendActivityAsync($@"Error : {Error.Message}
-Please, retype");
-                                    act = true;
-                                    Thread.Sleep(500);
+                                    throw new Exception("Неправильный ввод действия");
                                 }
+                                act = false;
                             }
-                            while (act);
-                            comandSQL = new SQLiteCommand($"UPDATE \"BankAccounts\" set \"Money\" = {money - summ} WHERE \"Login\" = \"{Login}\"", connect);
-                            comandSQL.ExecuteNonQuery();
-                            comandSQL = new SQLiteCommand($"SELECT (Money) FROM \"BankAccounts\" WHERE \"id\" = {id}", connect);
-                            reader = comandSQL.ExecuteReader(); reader.Read(); money = (long)reader["Money"];
-                            comandSQL = new SQLiteCommand($"UPDATE \"BankAccounts\" set \"Money\" = {Math.Round(summ + money - summ * 0.01F)} WHERE \"id\" = {id}", connect);
-                            comandSQL.ExecuteNonQuery();
-                            ; break;
+                            catch (Exception Error)
+                            {
+                                await turnContext.SendActivityAsync($@"Error : {Error.Message}
+Please retype ");
+                                act = true;
+                                Thread.Sleep(500);
+                            }
+                        }
+                        while (act);
+                        switch (action)
+                        {
+                            case 1:
+                                act = false;
+                                long summ = 0, id = 0;
+                                do
+                                {
+                                    await turnContext.SendActivityAsync("Enter client id : ");
+                                    try
+                                    {
+                                        Thread.Sleep(2000);
+                                        if (!Int64.TryParse(turnContext.Activity.Text, out id)) throw new Exception("Неверный id");
+                                        comandSQL = new SQLiteCommand("SELECT (\"id\") FROM \"BankAccounts\"", connect);
+                                        reader = comandSQL.ExecuteReader();
+                                        while (reader.Read()) if (id == (long)reader["id"]) { act = false; break; } else act = true;
+                                        reader.Close();
+                                        comandSQL.ExecuteNonQuery();
+                                        comandSQL = new SQLiteCommand($"SELECT (\"id\") FROM \"BankAccounts\" WHERE (\"Login\") = \"{Login}\"", connect);
+                                        reader = comandSQL.ExecuteReader(); reader.Read();
+                                        if (id == (long)reader["id"]) { reader.Close(); throw new Exception("Invalid id, you cannot transfer money to yourself"); }
+                                        reader.Close();
+                                        if (act) throw new Exception("Incorrect id");
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        await turnContext.SendActivityAsync($@"Error : {Error.Message}
+Please, retype");
+                                        act = true;
+                                        Thread.Sleep(500);
+                                    }
+                                }
+                                while (act);
+                                do
+                                {
+                                    await turnContext.SendActivityAsync($"Enter client id : {id}");
+                                    await turnContext.SendActivityAsync("Enter the amount to transfer(commission 1 %) : ");
+                                    try
+                                    {
+                                        Thread.Sleep(2000);
+                                        if (!long.TryParse(turnContext.Activity.Text, out summ) || summ < 0) throw new Exception("Невозможная сумма");
+                                        comandSQL = new SQLiteCommand($"SELECT (\"Money\") FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
+                                        reader = comandSQL.ExecuteReader(); reader.Read();
+                                        if (summ > (long)reader["Money"]) { reader.Close(); throw new Exception("You do not have enough funds"); }
+                                        act = false;
+
+                                    }
+                                    catch (Exception Error)
+                                    {
+                                        await turnContext.SendActivityAsync($@"Error : {Error.Message}
+Please, retype");
+                                        act = true;
+                                        Thread.Sleep(500);
+                                    }
+                                }
+                                while (act);
+                                comandSQL = new SQLiteCommand($"UPDATE \"BankAccounts\" set \"Money\" = {money - summ} WHERE \"Login\" = \"{Login}\"", connect);
+                                comandSQL.ExecuteNonQuery();
+                                comandSQL = new SQLiteCommand($"SELECT (Money) FROM \"BankAccounts\" WHERE \"id\" = {id}", connect);
+                                reader = comandSQL.ExecuteReader(); reader.Read(); money = (long)reader["Money"];
+                                comandSQL = new SQLiteCommand($"UPDATE \"BankAccounts\" set \"Money\" = {Math.Round(summ + money - summ * 0.01F)} WHERE \"id\" = {id}", connect);
+                                comandSQL.ExecuteNonQuery();
+                                ; break;
+                        }
+
+                        await turnContext.SendActivityAsync("Close program?");
+                        Thread.Sleep(2000);
+                        if (turnContext.Activity.Text.ToLower().Replace("l", "д").Replace("f", "а") == "да")
+                            break;
                     }
-
-                    await turnContext.SendActivityAsync("Close program?");
-                    Thread.Sleep(2000);
-                    if (turnContext.Activity.Text.ToLower().Replace("l", "д").Replace("f", "а") == "да")
-                        break;
+                    connect.Close();
                 }
-                connect.Close();
+
+
             }
-
-
         }
     }
 }
