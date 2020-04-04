@@ -227,17 +227,16 @@ So нам нужно создать новую");
         {
             //var replyText = $"Hello:  {turnContext.Activity.Text}";
             await turnContext.SendActivityAsync("Start?");
-
             //Program program;
             if (turnContext.Activity.Text == "Start")
             {
-
+                await turnContext.SendActivityAsync("Started");
                 SQLiteCommand comandSQL;
                 SQLiteDataReader reader;
                 string directory = System.IO.Path.Combine(Environment.CurrentDirectory, "Test.db"), Login = "";
                 //string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"); //ƒиректорию сам помен€ешь
                 //!
-                SQLiteConnection connect = new SQLiteConnection($"Data Source = {directory}; Version = 3");
+                SQLiteConnection connect = new SQLiteConnection($"Data Source = {directory};");
 
                 if (!File.Exists(directory))
                 {
