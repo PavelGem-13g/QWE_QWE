@@ -249,7 +249,7 @@ So нам нужно создать новую");
                     /*                    do
                                         {*/
                     await turnContext.SendActivityAsync($"Sorry, no database was found in the {directory} data base, so we need to create a new one");
-
+                }
                     connect.Open();
                     string Password;
 
@@ -395,4 +395,3 @@ Please, retype");
             }
         }
     }
-}
