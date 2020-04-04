@@ -236,7 +236,7 @@ So нам нужно создать новую");
                 string directory = System.IO.Path.Combine(Environment.CurrentDirectory, "Test.db"), Login = "";
                 //string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"); //ƒиректорию сам помен€ешь
                 //!
-                SQLiteConnection connect = new SQLiteConnection($"Data Source = {directory};");
+                SQLiteConnection connect = new SQLiteConnection($"Data Source ={directory};Version=3;");
 
                 if (!File.Exists(directory))
                 {
