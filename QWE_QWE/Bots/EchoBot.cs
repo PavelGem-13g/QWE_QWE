@@ -234,7 +234,8 @@ So нам нужно создать новую");
 
                 SQLiteCommand comandSQL;
                 SQLiteDataReader reader;
-                string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"), Login = ""; //Директорию сам поменяешь
+                string directory = System.IO.Path.Combine(Environment.CurrentDirectory, "Test.db"), Login = "";
+                //string directory = Path.Combine(Environment.CurrentDirectory, "Test.db"); //Директорию сам поменяешь
                                                                                                       //!
                 SQLiteConnection connect = new SQLiteConnection($"Data Source = {directory}; Version = 3");
 
