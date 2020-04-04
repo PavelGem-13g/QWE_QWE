@@ -225,8 +225,8 @@ So нам нужно создать новую");
     {
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            var replyText = $"Hello:  {turnContext.Activity.Text}";
-            await turnContext.SendActivityAsync(replyText);
+            //var replyText = $"Hello:  {turnContext.Activity.Text}";
+            await turnContext.SendActivityAsync("Start?");
 
             //Program program;
             if (turnContext.Activity.Text == "Start")
