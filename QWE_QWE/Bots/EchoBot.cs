@@ -274,8 +274,8 @@ So нам нужно создать новую");
                         catch (Exception Error)
                         {
                             await turnContext.SendActivityAsync($"Error : {Error.Message} Please retype");
-                            Pas = true;
-                            Thread.Sleep(500);
+                            //Pas = true;
+                            //Thread.Sleep(500);
                         }
                     }
                     while (Pas || !Log);
