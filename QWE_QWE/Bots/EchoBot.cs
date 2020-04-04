@@ -264,7 +264,7 @@ So нам нужно создать новую");
                             await turnContext.SendActivityAsync("Enter Login : ");
                             Login = turnContext.Activity.Text;
                             Thread.Sleep(2000);
-                            comandSQL = new SQLiteCommand($"SELECT Login FROM \"BankAccounts\"", connect);
+                            comandSQL = new SQLiteCommand($"SELECT \"Login\" FROM \"BankAccounts\"", connect);
                             reader = comandSQL.ExecuteReader();
                             while (reader.Read()) if ((string)reader["Login"] == Login) Log = true;
                             if (!Log) throw new Exception("There is no user with this Login");
