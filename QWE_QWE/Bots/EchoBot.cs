@@ -262,17 +262,17 @@ So нам нужно создать новую");
                                 if (!Log) throw new Exception("There is no user with this Login");
                             }
                             else await turnContext.SendActivityAsync($"Еnter Login : {Login}");
-                            comandSQL = new SQLiteCommand($"SELECT * FROM \"BankAccounts\" WHERE \"Login\" = \"{Login}\"", connect);
+                            comandSQL = new SQLiteCommand(@"SELECT * FROM BankAccounts WHERE Login = "+Login+"", connect);
                             reader = comandSQL.ExecuteReader();
                             reader.Read();
                             await turnContext.SendActivityAsync("Еnter Password : ");
                             Password = turnContext.Activity.Text;
-                            if (Password != (string)reader["Password"]) throw new Exception("Неправильный пароль");
+                            if (Password != (string)reader["Password"]) throw new Exception("Incorrect password");
                             Pas = false;
                         }
                         catch (Exception Error)
                         {
-                            await turnContext.SendActivityAsync($"Error : {Error.Message} Please retype");
+                            await turnContext.SendActivityAsync($"Error : {Error.Message}");
                             //Pas = true;
                             //Thread.Sleep(500);
                         }
