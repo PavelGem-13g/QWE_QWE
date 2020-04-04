@@ -250,46 +250,7 @@ So нам нужно создать новую");
                     /*                    do
                                         {*/
                     await turnContext.SendActivityAsync($"Sorry, no database was found in the {directory} data base, so we need to create a new one");
-/*                        Console.WriteLine("Введите количество клиентов банка");
-                        try { if (!Int32.TryParse(Console.ReadLine(), out n) || n <= 0) throw new Exception("Неправильно введено количество клиентов"); action = false; }
-                        catch (Exception Error) { Console.WriteLine($"Ошибка : {Error.Message} \nПовторите ввод"); action = true; }*/
-                    }
-                    //while (action);
-/*                    connect.Open();
-                    comandSQL = new SQLiteCommand("CREATE TABLE IF NOT EXISTS \"BankAccounts\"" + "(\"id\" INTEGER PRIMARY KEY AUTOINCREMENT, \"Login\" TEXT, \"Password\" TEXT, \"Money\" INTEGER);", connect);
-                    for (int i = 0; i < n; i++)
-                    {
-                        comandSQL.ExecuteNonQuery();
-                        string[] information;
-                        do
-                        {
-                            try
-                            {
-                                Console.WriteLine(@"Введите логин, пароль и начальный счет клиента
-Пример : Deezbec MyBirthday 2000");
-                                information = Console.ReadLine().Split();
-                                if (information.Length != 3) throw new Exception("Было введено не 3 значения");
-                                if (!Int64.TryParse(information[2], out long x)) throw new Exception("Счёт не может состоять из букв");
-                                comandSQL = new SQLiteCommand($"SELECT (\"Login\") FROM \"BankAccounts\"", connect);
-                                reader = comandSQL.ExecuteReader();
-                                while (reader.Read()) if ((string)reader["Login"] == information[0]) throw new Exception("Такой пользователь уже существует");
-                            }
-                            catch (Exception Error)
-                            {
-                                Console.WriteLine($@"Ошибка : {Error.Message}
-Пожалуйста, повторите ввод");
-                                Thread.Sleep(500);
-                                information = InfInput(connect);
-                            }
-                            comandSQL = new SQLiteCommand($"INSERT INTO \"BankAccounts\" (\"Login\", \"Password\", \"Money\") " + $"VALUES (\"{information[0]}\", \"{information[1]}\", {Convert.ToInt64(information[2])})", connect);
-                        }w
 
-
-                    }
-                    comandSQL.ExecuteNonQuery();
-                }
-                else */
-                //Program.Log(connect, ref Login);
                 connect.Open();
                 string Password;
 
@@ -326,20 +287,6 @@ So нам нужно создать новую");
                     }
                 }
                 while (Pas || !Log);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
                 while (true)
                 {
@@ -439,16 +386,6 @@ Please, retype");
                             ; break;
                     }
 
-
-
-
-
-
-
-
-
-                    //Program.AllOutput(connect);
-                    //Console.Write("\nВсё? ");
                     await turnContext.SendActivityAsync("Close program?");
                     Thread.Sleep(2000);
                     if (turnContext.Activity.Text.ToLower().Replace("l", "д").Replace("f", "а") == "да")
