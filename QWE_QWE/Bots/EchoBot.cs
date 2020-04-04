@@ -240,16 +240,11 @@ So нам нужно создать новую");
 
                 if (!File.Exists(directory))
                 {
-                    //Program.IfNoBD(directory, connect);
-                    //int n = 0;
-                    //bool action = false;
-                    //!
-                    SQLiteConnection.CreateFile($"{directory}");
-                    //string[] information;
-                    /*                    do
-                                        {*/
+                    //SQLiteConnection.CreateFile($"{directory}");
                     await turnContext.SendActivityAsync($"Sorry, no database was found in the {directory} data base, so we need to create a new one");
                 }
+                else
+                {
                     connect.Open();
                     string Password;
 
@@ -393,5 +388,8 @@ Please, retype");
 
 
             }
+
+
         }
     }
+}
